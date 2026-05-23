@@ -1,0 +1,19 @@
+server:
+  port: 7476
+
+spring:
+  application:
+    name: UberUserService
+  datasource:
+    url: jdbc:mysql://localhost:3306/uber_user_db
+    username: root
+    password: Cap2an@21
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  flyway:
+    enabled: true
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
