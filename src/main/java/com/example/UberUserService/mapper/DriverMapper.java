@@ -2,6 +2,7 @@ package com.example.UberUserService.mapper;
 
 import com.example.UberUserService.dto.CreateDriverRequestDto;
 import com.example.UberUserService.dto.DriverResponseDto;
+import com.example.UberUserService.dto.NearbyDriverResponseDto;
 import com.example.UberUserService.entities.Driver;
 import com.example.UberUserService.entities.User;
 import org.mapstruct.Mapper;
@@ -27,6 +28,12 @@ public interface DriverMapper {
     @Mapping(target = "email", source = "user.email")
     @Mapping(target = "phoneNumber", source = "user.phoneNumber")
     DriverResponseDto toDriverResponseDto(Driver driver);
+
+    @Mapping(target = "driverId", source = "id")
+    @Mapping(target = "driverName", source = "user.name")
+    @Mapping(target = "latitude", source = "currentLatitude")
+    @Mapping(target = "longitude", source = "currentLongitude")
+    NearbyDriverResponseDto toNearbyDriverResponseDto(Driver driver);
 
 }
 

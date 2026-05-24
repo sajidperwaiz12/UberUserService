@@ -2,6 +2,7 @@ package com.example.UberUserService.services.impl;
 
 import com.example.UberUserService.dto.CreateDriverRequestDto;
 import com.example.UberUserService.dto.DriverResponseDto;
+import com.example.UberUserService.dto.NearbyDriverResponseDto;
 import com.example.UberUserService.entities.Driver;
 import com.example.UberUserService.entities.User;
 import com.example.UberUserService.enums.Role;
@@ -11,8 +12,12 @@ import com.example.UberUserService.mapper.DriverMapper;
 import com.example.UberUserService.repositories.DriverRepository;
 import com.example.UberUserService.repositories.UserRepository;
 import com.example.UberUserService.services.DriverService;
+import com.example.UberUserService.utils.DistanceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +29,7 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public DriverResponseDto createDriver(CreateDriverRequestDto request) {
-        User user = userRepository.findById(request.getId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (user.getRole() != Role.DRIVER) {
             throw new BadRequestException("User role is not DRIVER");
@@ -68,6 +73,35 @@ public class DriverServiceImpl implements DriverService {
         driver.setCurrentLongitude(longitude);
         Driver savedDriver = driverRepository.save(driver);
         return driverMapper.toDriverResponseDto(savedDriver);
+    }
+
+    @Override
+    public List<NearbyDriverResponseDto> findNearbyDrivers(Double latitude, Double longitude, Double radiusKm) {
+        List<Driver> drivers = driverRepository.findByOnlineTrueAndAvailableTrue();
+
+        return drivers.stream()
+                .filter(driver ->
+                    driver.getCurrentLatitude() != null
+                    && driver.getCurrentLongitude() != null
+                )
+                .map(driver -> {
+                    Double distance = DistanceUtils.calculateDistance(
+                            latitude,
+                            longitude,
+                            driver.getCurrentLatitude(),
+                            driver.getCurrentLongitude()
+                    );
+                    NearbyDriverResponseDto nearbyDriverResponseDto = driverMapper.toNearbyDriverResponseDto(driver);
+                    nearbyDriverResponseDto.setDistanceInKm(distance);
+                    return nearbyDriverResponseDto;
+                })
+                .filter(nearbyDriverResponseDto ->
+                    nearbyDriverResponseDto.getDistanceInKm() <= radiusKm
+                )
+                .sorted(Comparator.comparing(
+                        NearbyDriverResponseDto::getDistanceInKm
+                ))
+                .toList();
     }
 }
 

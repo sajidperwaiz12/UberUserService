@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class CreateDriverRequestDto {
 
-    private Long id;
+    private Long userId;
     private String licenseNumber;
     private String aadhaarNumber;
     private String vehicleNumber;
