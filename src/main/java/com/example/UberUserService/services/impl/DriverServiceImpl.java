@@ -1,6 +1,7 @@
 package com.example.UberUserService.services.impl;
 
 import com.example.UberUserService.dto.CreateDriverRequestDto;
+import com.example.UberUserService.dto.DriverResponseDto;
 import com.example.UberUserService.entities.Driver;
 import com.example.UberUserService.entities.User;
 import com.example.UberUserService.enums.Role;
@@ -20,7 +21,7 @@ public class DriverServiceImpl implements DriverService {
     private final DriverMapper driverMapper;
 
     @Override
-    public Driver createDriver(CreateDriverRequestDto request) {
+    public DriverResponseDto createDriver(CreateDriverRequestDto request) {
         User user = userRepository.findById(request.getId()).orElseThrow(() -> new RuntimeException("User not found"));
 
         if (user.getRole() != Role.DRIVER) {
@@ -45,22 +46,26 @@ public class DriverServiceImpl implements DriverService {
 
         Driver driver = driverMapper.toDriver(request, user);
 
-        return driverRepository.save(driver);
+        Driver savedDriver = driverRepository.save(driver);
+
+        return driverMapper.toDriverResponseDto(savedDriver);
     }
 
     @Override
-    public Driver updateAvailability(Long driverId, Boolean available) {
+    public DriverResponseDto updateAvailability(Long driverId, Boolean available) {
         Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new RuntimeException("Driver not found"));
         driver.setAvailable(available);
-        return driverRepository.save(driver);
+        Driver savedDriver =  driverRepository.save(driver);
+        return driverMapper.toDriverResponseDto(savedDriver);
     }
 
     @Override
-    public Driver updateLocation(Long driverId, Double latitude, Double longitude) {
+    public DriverResponseDto updateLocation(Long driverId, Double latitude, Double longitude) {
         Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new RuntimeException("Driver not found"));
         driver.setCurrentLatitude(latitude);
         driver.setCurrentLongitude(longitude);
-        return driverRepository.save(driver);
+        Driver savedDriver = driverRepository.save(driver);
+        return driverMapper.toDriverResponseDto(savedDriver);
     }
 }
 
