@@ -1,0 +1,25 @@
+package com.example.UberUserService.mapper;
+
+import com.example.UberUserService.dto.CreateDriverRequestDto;
+import com.example.UberUserService.entities.Driver;
+import com.example.UberUserService.entities.User;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+@Mapper(componentModel = "spring")
+public interface DriverMapper {
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "user", source = "user")
+    @Mapping(target = "available", constant = "true")
+    @Mapping(target = "online", constant = "false")
+    @Mapping(target = "rating", constant = "0.0")
+    @Mapping(target = "totalRides", constant = "0")
+    @Mapping(target = "currentLatitude", ignore = true)
+    @Mapping(target = "currentLongitude", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    Driver toDriver(CreateDriverRequestDto driver, User user);
+
+}
+
