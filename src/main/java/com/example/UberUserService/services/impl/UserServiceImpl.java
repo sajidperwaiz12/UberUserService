@@ -2,6 +2,7 @@ package com.example.UberUserService.services.impl;
 
 import com.example.UberUserService.dto.UserRequestDto;
 import com.example.UberUserService.entities.User;
+import com.example.UberUserService.exceptions.ResourceNotFoundException;
 import com.example.UberUserService.repositories.UserRepository;
 import com.example.UberUserService.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 }
 
