@@ -67,44 +67,6 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public DriverResponseDto updateLocation(Long driverId, Double latitude, Double longitude) {
-        Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
-        driver.setCurrentLatitude(latitude);
-        driver.setCurrentLongitude(longitude);
-        Driver savedDriver = driverRepository.save(driver);
-        return driverMapper.toDriverResponseDto(savedDriver);
-    }
-
-    @Override
-    public List<NearbyDriverResponseDto> findNearbyDrivers(Double latitude, Double longitude, Double radiusKm) {
-        List<Driver> drivers = driverRepository.findByOnlineTrueAndAvailableTrue();
-
-        return drivers.stream()
-                .filter(driver ->
-                    driver.getCurrentLatitude() != null
-                    && driver.getCurrentLongitude() != null
-                )
-                .map(driver -> {
-                    Double distance = DistanceUtils.calculateDistance(
-                            latitude,
-                            longitude,
-                            driver.getCurrentLatitude(),
-                            driver.getCurrentLongitude()
-                    );
-                    NearbyDriverResponseDto nearbyDriverResponseDto = driverMapper.toNearbyDriverResponseDto(driver);
-                    nearbyDriverResponseDto.setDistanceInKm(distance);
-                    return nearbyDriverResponseDto;
-                })
-                .filter(nearbyDriverResponseDto ->
-                    nearbyDriverResponseDto.getDistanceInKm() <= radiusKm
-                )
-                .sorted(Comparator.comparing(
-                        NearbyDriverResponseDto::getDistanceInKm
-                ))
-                .toList();
-    }
-
-    @Override
     public DriverResponseDto updateOnline(Long driverId, Boolean online) {
         Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
         driver.setOnline(online);

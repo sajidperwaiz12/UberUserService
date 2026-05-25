@@ -17,8 +17,6 @@ public interface DriverMapper {
     @Mapping(target = "online", constant = "false")
     @Mapping(target = "rating", constant = "0.0")
     @Mapping(target = "totalRides", constant = "0")
-    @Mapping(target = "currentLatitude", ignore = true)
-    @Mapping(target = "currentLongitude", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     Driver toDriver(CreateDriverRequestDto driver, User user);
@@ -31,8 +29,6 @@ public interface DriverMapper {
 
     @Mapping(target = "driverId", source = "id")
     @Mapping(target = "driverName", source = "user.name")
-    @Mapping(target = "latitude", source = "currentLatitude")
-    @Mapping(target = "longitude", source = "currentLongitude")
     NearbyDriverResponseDto toNearbyDriverResponseDto(Driver driver);
 
 }

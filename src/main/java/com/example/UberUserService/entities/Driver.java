@@ -41,9 +41,5 @@ public class Driver extends BaseModel {
     @Builder.Default
     private Integer totalRides = 0;
 
-    private Double currentLatitude;
-
-    private Double currentLongitude;
-
 }
 

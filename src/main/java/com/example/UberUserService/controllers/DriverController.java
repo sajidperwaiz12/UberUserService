@@ -33,22 +33,6 @@ public class DriverController {
         return new ResponseEntity<>(driverService.updateAvailability(driverId, available), HttpStatus.OK);
     }
 
-    @PostMapping("/{driverId}/location")
-    @Operation(summary = "Update Location")
-    public ResponseEntity<DriverResponseDto> updateLocation(@PathVariable Long driverId, @RequestParam Double latitude, @RequestParam Double longitude) {
-        return new ResponseEntity<>(driverService.updateLocation(driverId, latitude, longitude), HttpStatus.OK);
-    }
-
-    @GetMapping("/nearby")
-    @Operation(summary = "Find Nearby Drivers")
-    public ResponseEntity<List<NearbyDriverResponseDto>> findNearbyDrivers(
-            @RequestParam Double latitude,
-            @RequestParam Double longitude,
-            @RequestParam(defaultValue = "5") Double radiusKm
-    ) {
-        return ResponseEntity.ok(driverService.findNearbyDrivers(latitude, longitude, radiusKm));
-    }
-
     @PostMapping("/{driverId}/online")
     @Operation(summary = "Update Online Status")
     public ResponseEntity<DriverResponseDto> updateOnline(@PathVariable Long driverId, @RequestParam Boolean online) {
