@@ -49,5 +49,11 @@ public class DriverController {
         return ResponseEntity.ok(driverService.findNearbyDrivers(latitude, longitude, radiusKm));
     }
 
+    @PostMapping("/{driverId}/online")
+    @Operation(summary = "Update Online Status")
+    public ResponseEntity<DriverResponseDto> updateOnline(@PathVariable Long driverId, @RequestParam Boolean online) {
+        return new ResponseEntity<>(driverService.updateOnline(driverId, online), HttpStatus.OK);
+    }
+
 }
 

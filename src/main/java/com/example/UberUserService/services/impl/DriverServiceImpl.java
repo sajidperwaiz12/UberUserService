@@ -103,5 +103,13 @@ public class DriverServiceImpl implements DriverService {
                 ))
                 .toList();
     }
+
+    @Override
+    public DriverResponseDto updateOnline(Long driverId, Boolean online) {
+        Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
+        driver.setOnline(online);
+        Driver savedDriver =  driverRepository.save(driver);
+        return driverMapper.toDriverResponseDto(savedDriver);
+    }
 }
 

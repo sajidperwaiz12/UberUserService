@@ -12,5 +12,7 @@ public interface DriverService {
     DriverResponseDto updateLocation(Long driverId, Double latitude, Double longitude);
 
     List<NearbyDriverResponseDto> findNearbyDrivers(Double latitude, Double longitude, Double radiusKm);
+
+    DriverResponseDto updateOnline(Long driverId, Boolean online);
 }
 
